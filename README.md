@@ -12,6 +12,9 @@
 # Network and system terminal CLI tools
 sudo apt-get -y install net-tools curl wget nmap htop
 
+# Client smb file share access tools
+sudo apt-get -y install cifs-utils smbclient
+
 # Development and version control tools
 sudo apt-get -y install git
 
