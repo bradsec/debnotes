@@ -64,9 +64,6 @@ sudo apt-get -y install inkscape
 # Terminal image viewer
 sudo apt-get -y install feh
 
-# VNC Viewer
-sudo apt install vinagre
-
 # Screenshot Screen Capture and Recording tools
 sudo apt-get -y install flameshot
 sudo apt-get -y install kazam
