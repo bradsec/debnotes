@@ -82,6 +82,43 @@ sudo apt-get -y autoclean
 sudo apt-get -y install --fix-broken
 ```
 
+## Samba File Sharing (example sharing your home directory with write permissions)
+```
+# Install Samba server package
+sudo apt-get -y install samba
+
+# Backup original Samba config file
+sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
+
+# Edit /etc/samba/smb.conf with preferred editor nano, vim etc.
+# Append share details to bottom of smb.conf file.
+
+[shared-folder] # change to preferred reference name this is referenced when connecting ie. smb://server-ip/shared-folder
+   path = /home/your_username
+   available = yes
+   valid users = your_username
+   read only = no
+   browsable = yes
+   public = yes
+   writable = yes
+   create mask = 0644
+   directory mask = 0755
+
+# Save file and exit
+# Restart Samba server
+sudo systemctl restart smbd
+
+# Create a Samba access password for the user specified in smb.conf valid users section this does not affect your normal system access password.
+sudo smbpasswd -a your_username
+
+# Notes - If running a firewall you may need to allow Samba
+sudo ufw allow Samba
+
+# Connect to share from a client machine
+# Windows: \\debian_hostname_or_ip\shared-folder
+# macOS and Linux: smb://debian_hostname_or_ip/shared-folder
+```
+
 ## GNOME Specific Improve Desktop Appearance
 ```terminal
 # Install GNOME tweaks
