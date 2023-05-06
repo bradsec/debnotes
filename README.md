@@ -24,8 +24,8 @@ sudo apt-get -y install git
 # Add kernel and module build tools
 sudo apt-get -y install build-essential dkms linux-headers-$(uname -r)
 
-# Add additional make tools
-sudo apt-get -y install sassc gettext
+# Add additional developer make tools
+sudo apt-get -y install make sassc gettext
 
 # Python3 and pip3
 sudo apt-get -y install python3 python3-pip python3-gpg 
