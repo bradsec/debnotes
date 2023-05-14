@@ -2,6 +2,8 @@
 
 # Debian Linux (including Kali, Ubuntu, PopOS)<br>Installation Notes, Hints & Tips
 
+[Docker Install](#docker-install)
+
 ## Install Common Utilities and Applications
 - Most applications below require a desktop environment installed such as GNOME, LXDE etc.
 - Later versions of Debian or Ubuntu (Ubuntu 20.04+) should not require additional apt sources to install the packages listed below.
