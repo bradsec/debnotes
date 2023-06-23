@@ -228,26 +228,18 @@ sudo apt-get -y install tlp-get -y
 sudo apt-get -y install ubuntu-restricted-extras
 ```
 
-## NVidia Graphics Specific
+## Nvidia Graphics Specific
 ```terminal
+# Notes:
+# - Debian 12 Bookworm enable or append 'contrib non-free' to etc source in `/etc/apt/sources.list`
+# - Then run `sudo apt update`  
+# - Also if BIOS Secure boot is enable you may have some issues with the system failing to boot
+# unless you correctly sign the modules as suggested: https://wiki.debian.org/NvidiaGraphicsDrivers
+
 sudo apt-get -y install nvidia-detect
 sudo nvidia-detect
 sudo apt-get -y install nvidia-driver
 sudo apt-get -y install nvidia-cuda-toolkit nvidia-cuda-dev
-
-# Manual Cuda
-wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.0-1_all.deb
-sudo dpkg -i cuda-keyring_1.0-1_all.deb
-sudo add-apt-repository contrib
-sudo apt-get update
-sudo apt-get -y install cuda 
-
-# Older Version
-sudo apt install cuda-11-3
-
-# NVidia 3090 Debian Driver
-https://www.nvidia.com/content/DriverDownloads/confirmation.php?url=/XFree86/Linux-x86_64/525.85.05/NVIDIA-Linux-x86_64-525.85.05.run&lang=us&type=TITAN
-sudo sh filename.RUN
 ```
 
 ## File manager show dotfiles or hidden files
