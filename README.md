@@ -126,6 +126,35 @@ sudo ufw allow Samba
 # Install GNOME tweaks
 sudo apt-get -y install gnome-tweaks
 ```
+### Quick pimp GNOME default Terminal color scheme
+
+```Terminal
+#!/bin/bash
+
+# Get the list of profiles
+PROFILES=$(dconf list /org/gnome/terminal/legacy/profiles:/)
+
+# Optional - Set DEFAULT_PROFILE manually by getting profile ID using `dconf list /org/gnome/terminal/legacy/profiles:/`
+# Method below will attempt to extract the default profile, assuming default is first
+
+DEFAULT_PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
+
+PROFILE="/org/gnome/terminal/legacy/profiles:/:$DEFAULT_PROFILE"
+
+# Scheme similar to Kali dark color
+PALETTE="['#101010', '#ff6685', '#aaffaa', '#ffe156', '#00a2ff', '#c594c5', '#00ffff', '#cccccc', '#666666', '#ff669d', '#aaffaa', '#ffe156', '#00a2ff', '#c594c5', '#00ffff', '#ffffff']"
+FOREGROUND_COLOR="'#eeeeec'"
+BACKGROUND_COLOR="'#101010'"
+BOLD_COLOR="'#babdb6'"
+
+# Set the color scheme
+dconf write $PROFILE/palette "$PALETTE"
+dconf write $PROFILE/foreground-color "$FOREGROUND_COLOR"
+dconf write $PROFILE/background-color "$BACKGROUND_COLOR"
+dconf write $PROFILE/bold-color "$BOLD_COLOR"
+dconf write $PROFILE/bold-color-same-as-fg "false"
+dconf write $PROFILE/use-theme-colors "false"
+```
 
 ### GNOME Extensions
 - https://extensions.gnome.org
