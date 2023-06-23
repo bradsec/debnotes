@@ -497,15 +497,56 @@ Edit `~/.zshrc` and append the following to end of file
 ps -p $$
 ```
 
-### Custom prompt for ZSH shell
-Edit `~/.zshrc` and edit or add the following
+### Custom prompt for ZSH shell when running the Miniconda
+Edit `~/.zshrc` and append to end of file
 ```terminal
-PROMPT=$'\n%F{%(#.blue.cyan)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}(%B%F{%(#.blue.green)}%n%B%F{%(#.blue.white)}@%B%F{%(#.blue.cyan)}%m%b%F{%(#.blue.cyan)})-%b%F{%(#.blue.green)}[%B%F{%(#.blue.white)}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]%b%F{%(#.blue.cyan)}\n└─$ %b%F{reset}'
-```
-Prompt Result 
-```terminal
+# Prevent conda from changing the prompt
+export CONDA_CHANGEPS1=false
+CONDA_PATH="/home/yourusername/miniconda3" 
 
-┌──(user@machinename)-[/current_path/]
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/mark/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$CONDA_PATH/etc/profile.d/conda.sh" ]; then
+        . "$CONDA_PATH/etc/profile.d/conda.sh"
+    else
+        export PATH="$CONDA_PATH/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+NEWLINE_BEFORE_PROMPT=yes
+
+precmd() {
+    # Print a new line before the prompt, but only if it is not the first line
+    if [ "$NEWLINE_BEFORE_PROMPT" = yes ]; then
+        if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
+            _NEW_LINE_BEFORE_PROMPT=1
+        else
+            print ""
+        fi
+    fi
+}
+
+prompt_symbol=@
+# Modify the PROMPT variable to include conda env
+prompt_symbol='%F{white}'$prompt_symbol'%F{%(#.blue.green)}'
+
+# Modify the PROMPT variable to include conda env
+if [[ -n $CONDA_DEFAULT_ENV ]]; then
+    PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}${CONDA_DEFAULT_ENV:+($(basename $CONDA_DEFAULT_ENV))─}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+else
+    PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+fi
+
+```
+Prompt Result (base) is current active Conda environment
+```terminal
+┌──(base)─(user@machinehost)-[~]
 └─$ 
 ```
 
