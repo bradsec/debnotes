@@ -30,6 +30,9 @@ sudo apt-get -y install python3 python3-pip python3-gpg
 pip3 install --upgrade pip
 pip3 install setuptools
 
+## Other dependencies for Stable Diffusion Automatic1111 webui
+sudo apt-get -y install glibc-source libgoogle-perftools4 libtcmalloc-minimal4
+
 # Text editor tools
 sudo apt-get -y install vim
 
@@ -79,7 +82,6 @@ sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 sudo apt-get -y install --fix-broken
 ```
-
 ## Samba File Sharing (example sharing your home directory with write permissions)
 ```
 # Install Samba server package
