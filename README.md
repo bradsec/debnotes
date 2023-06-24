@@ -1,6 +1,4 @@
-## debian setup notes
-
-### Debian Linux (including Kali, Ubuntu, PopOS) installation notes, customisation, hints, guides and troubleshooting information.
+## Debian Linux (including Kali, Ubuntu, PopOS) installation notes, customisation, hints, guides and troubleshooting information.
 
 [Docker Install](#docker-install)
 
