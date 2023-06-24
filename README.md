@@ -164,6 +164,12 @@ dconf write $PROFILE/use-theme-colors "false"
 - Additional settings under Tweaks applcation
   - Appearance and Extensions tabs
 
+### GNOME Troubleshooting
+- Debian 12 Bookworm GNOME desktop loging error "Oops something went wrong..."
+- Drop to terminal `CTRL+ALT+F3`
+- Reinstall gnome-shell and gnome-session `sudo apt -y install --reinstall gnome-shell gnome-session`
+- Return to GNOME logo `CTRL+ALT+F1`  
+  
 ### Improve desktop appearance with improved themes/icons
 
 ```terminal
