@@ -168,7 +168,13 @@ dconf write $PROFILE/use-theme-colors "false"
 - Debian 12 Bookworm GNOME desktop loging error "Oops something went wrong..."
 - Drop to terminal `CTRL+ALT+F3`
 - Reinstall gnome-shell and gnome-session `sudo apt -y install --reinstall gnome-shell gnome-session`
-- Return to GNOME logo `CTRL+ALT+F1`  
+- Return to GNOME login and try again `CTRL+ALT+F1`
+- If reinstalling shell and session does not work you could try removing the users .config, .cache and .local folders.
+```terminal
+rm -rf /home/your_username/.config
+rm -rf /home/your_username/.local
+rm -rf /home/your_username/.cache
+```
   
 ### Improve desktop appearance with improved themes/icons
 
