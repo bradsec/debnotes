@@ -273,16 +273,25 @@ Shortcut `ctrl-h`
 - Modify by editting the /etc/sysctl.conf and add line below and reboot.  
 `vm.swappiness=10`
 
-## Debian Increase Boot Speed'
-- Edit grub loader `/etc/default/grub` and modify timeout from 5 to 0  
-`GRUB_TIMEOUT=0`
-- Alternatively copy and paste the sed replacement command below:
 ```terminal
-sudo sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/g' /etc/default/grub
+# Copy paste update swappiness
+# Set new value
+NEW_VAL=10
+# Adds value if it doesn't exist
+sudo grep -q 'vm.swappiness=' /etc/sysctl.conf || echo "vm.swappiness=${NEW_VAL}" | sudo tee -a /etc/sysctl.conf
+# Updates value if it already exists
+sudo sed -i "s/^vm.swappiness=.*/vm.swappiness=${NEW_VAL}/" /etc/sysctl.conf
+# Reload configuration
+sudo sysctl --system
 ```
 
-- Update GRUB and reboot to test  
-`sudo update-grub`
+## Debian GRUB increase Boot Speed and add splash screen if GNOME installed.
+
+```terminal
+sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=2/' /etc/default/grub
+sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/' /etc/default/grub
+sudo update-grub
+```
 
 ## Create home directories
 ```bash
