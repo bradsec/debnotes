@@ -254,7 +254,7 @@ sudo apt-get -y install nvidia-cuda-toolkit nvidia-cuda-dev
 ## File manager show dotfiles or hidden files
 Shortcut `ctrl-h`
 
-## Debian microcode
+## Debian 11 microcode
 - Open Synaptic Package Manager
 - Search "microcode"
 - Install appropriate microsoft AMD or Intel
