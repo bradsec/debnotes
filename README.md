@@ -431,7 +431,7 @@ Add the following line to ```sysctl.conf```:
 *Change all to interface adapter name for individual interfaces*  
 Run ```sudo sysctl -p``` to execute changes
 
-### Missing firmware (Debian base install)
+### Missing firmware (Debian 11 Bullseye base install)
 Check ```/etc/apt/sources.list``` contains ```contrib non-free``` otherwise edit the file append to end of each deb source line and run the following commands.
 
 If `sources.list` is missing contrib non-free:  
