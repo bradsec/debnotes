@@ -303,7 +303,7 @@ The following commands install the sudo package and adds the default (logged in 
 
 ```terminal
 su -c 'apt-get update && apt-get -y install sudo && \
-/sbin/usermod -aG sudo $USER && \
+/sbin/adduser $USER sudo && \
 exec su -l $USER'
 ```
 
@@ -311,6 +311,13 @@ To undo the above (remove user from group sudo and remove package sudo) run the 
 ```terminal
 su -c 'gpasswd -d $USER sudo && \
 apt-get -y remove sudo && exec su -l $USER'
+```
+
+### Debian 12 Bookworm contrib non-free
+```terminal
+# Append contrib and non-free to /etc/apt/sources.list
+sudo sed -i '/^deb .* non-free-firmware$/ s/$/ contrib non-free/; /^deb-src .* non-free-firmware$/ s/$/ contrib non-free/' /etc/apt/sources.list
+sudo apt update
 ```
 
 ### Updating Debian
