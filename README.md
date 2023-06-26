@@ -4,7 +4,6 @@
 - Most applications below require a desktop environment installed such as GNOME, LXDE etc.
 - Later versions of Debian or Ubuntu (Ubuntu 20.04+) should not require additional apt sources to install the packages listed below.
 - Copy and paste the commands below directly into a terminal to batch install the applications if required.
-- Other Debian applications which require more configuration to install have added to the [bradsec/bashscripts](https://github.com/bradsec/bashscripts) repo and have simple installation menu options.
 
 ```terminal
 # Network and system terminal CLI tools
