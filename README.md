@@ -302,7 +302,7 @@ sudo update-grub
 ```
 
 ## Create home directories
-```bash
+```terminal
 mkdir ~/.themes
 mkdir ~/.icons
 ```
@@ -689,17 +689,17 @@ gpg --decrypt --output decryptedfilename.txt encryptedfilename.gpg
 
 ## Linux commands and key file locations
 
-```bash
+```terminal
 # Show user accounts and groups
 cat /etc/passwd
 ```
 
-```bash
+```terminal
 # Show user shadow password file and hashes
 sudo cat /etc/shadow
 ```
 
-```bash
+```terminal
 # Show user sudoers privileges
 sudo cat /etc/sudoers
 
@@ -710,7 +710,7 @@ cat /etc/group | grep 'sudo'
 visudo
 ```
 
-```bash
+```terminal
 # List network interface details
 ip a
 ifconfig
@@ -727,7 +727,7 @@ ip r
 route
 ```
 
-```bash
+```terminal
 # Show open network ports related programs/services
 sudo netstat -tulpan
 
@@ -735,12 +735,12 @@ sudo netstat -tulpan
 sudo watch -n 3 "netstat -tulpan | grep ESTABLISHED"
 ```
 
-```bash
+```terminal
 # curl ignore SSL certificate errors and follow redirects including 301
 curl -kL https://address
 ```
 
-```bash
+```terminal
 # List cron jobs
 crontab -l
 
@@ -751,7 +751,7 @@ crontab -u root -l
 systemctl list-timers
 ```
 
-```bash
+```terminal
 # Show offered fileshare mounts
 showmount -e 192.168.0.10
 # result return ie. /srv/thisdir
@@ -761,10 +761,27 @@ mkdir /mnt/thisdir
 mount -t nfs 192.168.0.10:/srv/nfs /mnt/thisdir
 ```
 
-```bash
+```terminal
 # Monitor log events -f --follow show only the most recent
 sudo journalctl -f
 
 # View all logs for sudo
 sudo journalctl -e /usr/bin/sudo
+```
+
+### Networking
+Show network interface and address details
+
+```terminal
+# Show full network interface details
+ip address show
+
+# Show network interface names only
+ip address show | awk '/^[0-9]+:/ {sub(/:$/, "", $2); print $2}'
+
+# Show interface names with MAC addresses only
+ip address show | awk '/^[0-9]+:/ {interface=$2} /link\/ether/ {print interface, $2}'
+
+# Show only network interfaces with assigned IP addresses
+ip address show | awk '/^[0-9]+:/ {interface=$2} /inet / {print interface, $2}'
 ```
