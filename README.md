@@ -767,24 +767,52 @@ sudo journalctl -f
 sudo journalctl -e /usr/bin/sudo
 ```
 
+### Disable Enable Suspend Hibernete
+
+```terminal
+# Disable sleep suspect on laptop lid close, will take affect upon next reboot.
+sudo sed -i '/\[Login\]/a HandleLidSwitch=ignore\nHandleLidSwitchDocked=ignore' /etc/systemd/logind.conf
+```
+
+```terminal
+# Disable sleep, suspect, hibernate
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
+
+```terminal
+# Check status sleep, suspect, hibernate
+sudo systemctl status sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
+
+```terminal
+# Enable sleep, suspect, hibernate
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
+
 ### Networking
 Show network interface and address details
 
 ```terminal
 # Show full network interface details
 ip address show
+```
 
+```terminal
 # Show network interface names only
 ip address show | awk '/^[0-9]+:/ {sub(/:$/, "", $2); print $2}'
+```
 
+```terminal
 # Show interface names with MAC addresses only
 ip address show | awk '/^[0-9]+:/ {interface=$2} /link\/ether/ {print interface, $2}'
+```
 
+```terminal
 # Show only network interfaces with assigned IP addresses
 ip address show | awk '/^[0-9]+:/ {interface=$2} /inet / {print interface, $2}'
 ```
 
-#### Adding DHCP to a ethernet interface  
+Adding DHCP to a ethernet interface  
 - Change `enp0s31f6` to the interface name to configure with DHCP  
 Example config `/etc/network/interfaces`  
 
