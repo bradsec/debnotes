@@ -7,7 +7,7 @@
 
 ```terminal
 # Network and system terminal CLI tools
-sudo apt-get -y install net-tools curl wget nmap htop
+sudo apt-get -y install net-tools curl wget nmap htop nvtop
 
 # Client smb file share access tools
 sudo apt-get -y install cifs-utils smbclient
@@ -79,7 +79,7 @@ sudo apt-get -y install fonts-firacode -y
 
 # Update, Upgrade, and Cleanup and Fix Broken Installs
 sudo apt-get update
-sudo apt-get -y dist-upgrade
+sudo apt-get -y upgrade
 sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 sudo apt-get -y install --fix-broken
