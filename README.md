@@ -524,7 +524,7 @@ plugins=(
 ```
 
 ### Example of `.zshrc` with custom prompt
-Prompt includes support for python virtual environments venv and miniconda.
+Prompt included in .zshrc below supports Python virtual environments (venv and conda).
   
 Example prompt basic (prompt is colored):
 ```terminal
