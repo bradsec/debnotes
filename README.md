@@ -64,6 +64,9 @@ sudo apt-get -y install inkscape
 # Terminal image viewer
 sudo apt-get -y install feh
 
+# Terminal copy and paste tool
+sudo apt-get -y install xclip 
+
 # Screenshot Screen Capture and Recording tools
 sudo apt-get -y install flameshot
 sudo apt-get -y install kazam
@@ -227,7 +230,7 @@ sudo apt-get -y install ufw gufw
 sudo ufw enable
 ```
 
-## Laptop Specific - Power Management
+## Laptop Specific - Power Management (versions < Debian 12 Bookworm)
 ```terminal
 sudo apt-get -y install tlp-get -y
 ```
@@ -321,7 +324,7 @@ su -c 'gpasswd -d $USER sudo && \
 apt-get -y remove sudo && exec su -l $USER'
 ```
 
-### Debian 12 Bookworm contrib non-free
+### Debian 12 Bookworm (quick method) add contrib non-free
 ```terminal
 # Append contrib and non-free to /etc/apt/sources.list
 sudo sed -i '/^deb .* non-free-firmware$/ s/$/ contrib non-free/; /^deb-src .* non-free-firmware$/ s/$/ contrib non-free/' /etc/apt/sources.list
