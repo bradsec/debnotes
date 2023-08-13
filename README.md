@@ -165,15 +165,18 @@ dconf write $PROFILE/use-theme-colors "false"
   - Appearance and Extensions tabs
 
 ### GNOME Troubleshooting
-- Debian 12 Bookworm GNOME desktop loging error "Oops something went wrong..."
+- Debian 12 Bookworm GNOME desktop logging in error "Oops something went wrong..."
 - Drop to terminal `CTRL+ALT+F3`
-- Reinstall gnome-shell and gnome-session `sudo apt -y install --reinstall gnome-shell gnome-session`
+- Reinstall gnome-shell and gnome-session
+```terminal
+sudo apt -y install --reinstall gnome-shell gnome-session`
+```
 - Return to GNOME login and try again `CTRL+ALT+F1`
 - If reinstalling shell and session does not work you could try removing the users .config, .cache and .local folders.
 ```terminal
-rm -rf /home/your_username/.config
-rm -rf /home/your_username/.local
-rm -rf /home/your_username/.cache
+rm -rf /home/$USER/.config
+rm -rf /home/$USER/.local
+rm -rf /home/$USER/.cache
 ```
   
 ### Improve desktop appearance with improved themes/icons
@@ -501,6 +504,22 @@ docker run hello-world
 sudo apt-get -y install zsh
 ```
 
+### Install OhMyZsh and helpful plugins
+```terminal
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
+#### Edit ~/.zshrc
+Update plugin section - 
+```terminal
+plugins=(
+    git
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
+```
+
 ### Change default user shell to zsh (don't use sudo)  
 ```terminal
 chsh -s $(which zsh)
@@ -515,59 +534,6 @@ Edit `~/.zshrc` and append the following to end of file
 ### Check current user shell
 ```terminal
 ps -p $$
-```
-
-### Custom prompt for ZSH shell when running the Miniconda
-Edit `~/.zshrc` and append to end of file
-```terminal
-# Prevent conda from changing the prompt
-export CONDA_CHANGEPS1=false
-CONDA_PATH="/home/yourusername/miniconda3" 
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/mark/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$CONDA_PATH/etc/profile.d/conda.sh" ]; then
-        . "$CONDA_PATH/etc/profile.d/conda.sh"
-    else
-        export PATH="$CONDA_PATH/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-NEWLINE_BEFORE_PROMPT=yes
-
-precmd() {
-    # Print a new line before the prompt, but only if it is not the first line
-    if [ "$NEWLINE_BEFORE_PROMPT" = yes ]; then
-        if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
-            _NEW_LINE_BEFORE_PROMPT=1
-        else
-            print ""
-        fi
-    fi
-}
-
-prompt_symbol=@
-# Modify the PROMPT variable to include conda env
-prompt_symbol='%F{white}'$prompt_symbol'%F{%(#.blue.green)}'
-
-# Modify the PROMPT variable to include conda env
-if [[ -n $CONDA_DEFAULT_ENV ]]; then
-    PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}${CONDA_DEFAULT_ENV:+($(basename $CONDA_DEFAULT_ENV))─}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-else
-    PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-fi
-
-```
-Prompt Result (base) is current active Conda environment
-```terminal
-┌──(base)─(user@machinehost)-[~]
-└─$ 
 ```
 
 ### Fix slow lagging VNC and VNC resolution issues on headless Raspberry Pi 4
