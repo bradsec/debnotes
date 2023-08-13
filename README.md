@@ -1,5 +1,8 @@
 # Debian Linux (including Kali, Ubuntu, PopOS) installation notes, customisation, hints, guides and troubleshooting information.
 
+- For a quick way to install other Debian linux applications refer to [bradsec/debapps](https://github.com/bradsec/debapps)  
+- For a quick way to customise GNOME desktop refer to [bradsec/debgnome](https://github.com/bradsec/debgnome)
+
 ## Install Common Utilities and Applications
 - Most applications below require a desktop environment installed such as GNOME, LXDE etc.
 - Later versions of Debian or Ubuntu (Ubuntu 20.04+) should not require additional apt sources to install the packages listed below.
