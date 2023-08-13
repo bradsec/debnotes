@@ -687,8 +687,6 @@ gpg --decrypt --output decryptedfilename.txt encryptedfilename.gpg
 
 ## debian linux helpful commands
 
-## Linux commands and key file locations
-
 ```terminal
 # Show user accounts and groups
 cat /etc/passwd
