@@ -803,13 +803,13 @@ allow-hotplug enp0s31f6
 iface enp0s31f6 inet dhcp
 ```
   
-To bring network inferfaces up and down use `ifup` and `ifdown`
+To bring network inferfaces down and up use `ifdown` and `ifup`
 ```terminal
-# Set to up
-sudo ifup enp0s31f6
-
 # Set to down
 sudo ifdown enp0s31f6
+
+# Set to up
+sudo ifup enp0s31f6
 ```
 
 
