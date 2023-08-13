@@ -510,7 +510,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 ```
-#### Edit ~/.zshrc
+#### Edit `~/.zshrc`
 Update plugin section - 
 ```terminal
 plugins=(
@@ -519,6 +519,101 @@ plugins=(
     zsh-syntax-highlighting
 )
 ```
+
+### Example of `.zshrc` with custom prompt
+Prompt includes support for python virtual environments venv and miniconda.
+  
+Example prompt basic (prompt is colored):
+```terminal
+┌──(conda_base)─(user@hostname)-[/dirpath]
+└─$ 
+```
+#### .zshrc contents
+```terminal
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export ZSH="$HOME/.oh-my-zsh"
+export CONDA_PATH="$HOME/miniconda3"
+ZSH_THEME="robbyrussell"
+
+plugins=(
+    git
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+export CONDA_CHANGEPS1=false
+
+# >>> conda initialize >>>
+__conda_setup="$('$CONDA_PATH/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$CONDA_PATH/etc/profile.d/conda.sh" ]; then
+        . "$CONDA_PATH/etc/profile.d/conda.sh"
+    else
+        export PATH="$CONDA_PATH/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+NEWLINE_BEFORE_PROMPT=yes
+
+precmd() {
+    # Print a new line before the prompt, but only if it is not the first line
+    if [ "$NEWLINE_BEFORE_PROMPT" = yes ]; then
+        if [ -z "$_NEW_LINE_BEFORE_PROMPT" ]; then
+            _NEW_LINE_BEFORE_PROMPT=1
+        else
+            print ""
+        fi
+    fi
+}
+
+prompt_symbol=@
+
+# Modify the PROMPT variable to include conda env
+prompt_symbol='%F{white}'$prompt_symbol'%F{blue}'
+
+# Function to update the prompt
+update_prompt() {
+    local prompt_symbol='%F{white}'$prompt_symbol'%F{blue}'
+    local conda_env_name=''
+    local env_name=''
+
+    if [[ -n $VIRTUAL_ENV ]]; then
+        env_name=$(basename "$VIRTUAL_ENV")
+    fi
+
+    if [[ -n $CONDA_DEFAULT_ENV ]]; then
+        conda_env_name=$(basename "$CONDA_DEFAULT_ENV")
+    fi
+
+    # Add conditional for different shells
+    if [[ $SHELL == *"zsh"* ]]; then
+        PROMPT="%F{blue}┌──${debian_chroot:+($debian_chroot)─}${env_name:+(venv_$env_name)─}${conda_env_name:+(conda_$conda_env_name)─}(%B%F{%(#.red.green)}%n$prompt_symbol%m%b%F{blue})-[%B%F{reset}%~%b%F{blue}]
+%F{blue}└─%B%(#.%F{red}#.%F{cyan}$)%b%F{reset} "
+    elif [[ $SHELL == *"bash"* ]]; then
+        PS1="\[\e[34m\]┌──${debian_chroot:+($debian_chroot)─}${env_name:+(venv_$env_name)─}${conda_env_name:+(conda_$conda_env_name)─}\[\e[m\]\[\e[1m\]\[\e[38;5;$(( $(id -u) == 0 ? 1 : 2 ))m\]\u$prompt_symbol\h\[\e[m\]\[\e[34m\]\]-[\[\e[m\]\[\e[1m\]\[\e[0m\]\w\[\e[m\]\[\e[34m\]\]
+\[\e[34m\]└─\[\e[m\]\[\e[1m\]\[\e[38;5;$(( $(id -u) == 0 ? 1 : 6 ))m\]#\[\e[m\]\[\e[1m\]\[\e[0m\] "
+    fi
+}
+
+# Call the update_prompt function initially
+update_prompt
+
+# Function to update the prompt when the command is executed
+if [[ $SHELL == *"zsh"* ]]; then
+    precmd_functions+=(update_prompt)
+elif [[ $SHELL == *"bash"* ]]; then
+    PROMPT_COMMAND=update_prompt
+fi
+
+# Adjust path if required. Example below is for when Go was installed.
+export PATH=/usr/local/go/bin:$PATH
+```
+
 
 ### Change default user shell to zsh (don't use sudo)  
 ```terminal
