@@ -783,3 +783,35 @@ ip address show | awk '/^[0-9]+:/ {interface=$2} /link\/ether/ {print interface,
 # Show only network interfaces with assigned IP addresses
 ip address show | awk '/^[0-9]+:/ {interface=$2} /inet / {print interface, $2}'
 ```
+
+#### Adding DHCP to a ethernet interface  
+- Change `enp0s31f6` to the interface name to configure with DHCP  
+Example config `/etc/network/interfaces`  
+
+```terminal
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The ethernet interface to be configured with DHCP
+allow-hotplug enp0s31f6
+iface enp0s31f6 inet dhcp
+```
+  
+To bring network inferfaces up and down use `ifup` and `ifdown`
+```terminal
+# Set to up
+sudo ifup enp0s31f6
+
+# Set to down
+sudo ifdown enp0s31f6
+```
+
+
+
+
