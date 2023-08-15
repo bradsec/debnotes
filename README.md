@@ -10,7 +10,7 @@
 
 ```terminal
 # Network and system terminal CLI tools
-sudo apt-get -y install net-tools curl wget nmap htop nvtop
+sudo apt-get -y install net-tools curl wget nmap tmux htop nvtop
 
 # Client smb file share access tools
 sudo apt-get -y install cifs-utils smbclient
@@ -59,6 +59,9 @@ sudo apt-get -y install stacer
 
 # File archive compression tools
 sudo apt-get -y install rar unrar
+
+# Remote desktop access client
+sudo apt-get -y install remmina
 
 # Image editor tools
 sudo apt-get -y install gimp
