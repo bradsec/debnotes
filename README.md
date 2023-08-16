@@ -10,7 +10,7 @@
 
 ```terminal
 # Network and system terminal CLI tools
-sudo apt-get -y install net-tools curl wget nmap tmux htop nvtop
+sudo apt-get -y install net-tools nfs-common curl wget nmap tmux htop nvtop
 
 # Client smb file share access tools
 sudo apt-get -y install cifs-utils smbclient
