@@ -90,6 +90,16 @@ sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 sudo apt-get -y install --fix-broken
 ```
+## Printer support
+```terminal
+# Ref: https://wiki.debian.org/SystemPrinting
+sudo apt-get -y install printer-driver-all
+
+# CUPS is commonly installed with the default install packages Debian 11 and 12
+sudo apt-get -y cups
+```
+
+
 ## Samba File Sharing (example sharing your home directory with write permissions)
 ```
 # Install Samba server package
