@@ -93,8 +93,8 @@ sudo apt-get -y install --fix-broken
 ## Anti-Virus ClamAV
 ```terminal
 # Install requirements
-sudo apt-get -y clamav
-sudo apt-get -y clamav-daemon
+sudo apt-get -y install clamav
+sudo apt-get -y install clamav-daemon
 
 # Update signatures
 sudo systemctl stop clamav-freshclam
