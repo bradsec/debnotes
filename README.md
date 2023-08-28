@@ -90,6 +90,21 @@ sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 sudo apt-get -y install --fix-broken
 ```
+## Anti-Virus
+```terminal
+# Install requirements
+sudo apt-get -y clamav
+sudo apt-get -y clamav-daemon
+
+# Update signatures
+sudo systemctl stop clamav-freshclam
+sudo -u clamav freshclam
+sudo systemctl start clamav-freshclam
+
+# Restart Daemon
+sudo systemctl restart clamav-daemon
+```
+
 ## Printer support
 ```terminal
 # Ref: https://wiki.debian.org/SystemPrinting
