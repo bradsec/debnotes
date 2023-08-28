@@ -90,7 +90,7 @@ sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 sudo apt-get -y install --fix-broken
 ```
-## Anti-Virus
+## Anti-Virus ClamAV
 ```terminal
 # Install requirements
 sudo apt-get -y clamav
