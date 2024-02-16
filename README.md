@@ -868,6 +868,76 @@ sudo ifdown enp0s31f6
 sudo ifup enp0s31f6
 ```
 
+## Bad kernal update 16 Feb 2024, 6.1.0-18 causing issues updating or upgrading packages
+
+```terminal
+# Terminal error after attempting to apt update and upgrade
+Building module:
+Cleaning build area...
+unset ARCH; env NV_VERBOSE=1 make -j12 modules KERNEL_UNAME=6.1.0-18-amd64..............(bad exit status: 2)
+Error! Bad return status for module build on kernel: 6.1.0-18-amd64 (x86_64)
+Consult /var/lib/dkms/nvidia-current/545.23.08/build/make.log for more information.
+Error! One or more modules failed to install during autoinstall.
+Refer to previous errors for more information.
+dkms: autoinstall for kernel: 6.1.0-18-amd64 failed!
+run-parts: /etc/kernel/postinst.d/dkms exited with return code 11
+dpkg: error processing package linux-image-6.1.0-18-amd64 (--configure):
+ installed linux-image-6.1.0-18-amd64 package post-installation script subprocess returned error exit status 1
+Setting up linux-headers-6.1.0-18-amd64 (6.1.76-1) ...
+/etc/kernel/header_postinst.d/dkms:
+dkms: running auto installation service for kernel 6.1.0-18-amd64.
+Sign command: /usr/lib/linux-kbuild-6.1/scripts/sign-file
+Signing key: /var/lib/dkms/mok.key
+Public certificate (MOK): /var/lib/dkms/mok.pub
+
+Building module:
+Cleaning build area...
+unset ARCH; env NV_VERBOSE=1 make -j12 modules KERNEL_UNAME=6.1.0-18-amd64..............(bad exit status: 2)
+Error! Bad return status for module build on kernel: 6.1.0-18-amd64 (x86_64)
+Consult /var/lib/dkms/nvidia-current/545.23.08/build/make.log for more information.
+Error! One or more modules failed to install during autoinstall.
+Refer to previous errors for more information.
+dkms: autoinstall for kernel: 6.1.0-18-amd64 failed!
+run-parts: /etc/kernel/header_postinst.d/dkms exited with return code 11
+Failed to process /etc/kernel/header_postinst.d at /var/lib/dpkg/info/linux-headers-6.1.0-18-amd64.postinst line 11.
+dpkg: error processing package linux-headers-6.1.0-18-amd64 (--configure):
+ installed linux-headers-6.1.0-18-amd64 package post-installation script subprocess returned error exit status 1
+dpkg: dependency problems prevent configuration of linux-image-amd64:
+ linux-image-amd64 depends on linux-image-6.1.0-18-amd64 (= 6.1.76-1); however:
+  Package linux-image-6.1.0-18-amd64 is not configured yet.
+
+dpkg: error processing package linux-image-amd64 (--configure):
+ dependency problems - leaving unconfigured
+dpkg: dependency problems prevent configuration of linux-headers-amd64:
+ linux-headers-amd64 depends on linux-headers-6.1.0-18-amd64 (= 6.1.76-1); however:
+  Package linux-headers-6.1.0-18-amd64 is not configured yet.
+
+dpkg: error processing package linux-headers-amd64 (--configure):
+ dependency problems - leaving unconfigured
+Errors were encountered while processing:
+ linux-image-6.1.0-18-amd64
+ linux-headers-6.1.0-18-amd64
+ linux-image-amd64
+ linux-headers-amd64
+E: Sub-process /usr/bin/dpkg returned an error code (1)
+```
+
+## Problem
+The following commands fail `sudo apt install --fix-broken` and `sudo dpkg --configure -a` as they are stuck on `unset ARCH; env NV_VERBOSE=1 make -j12 modules KERNEL_UNAME=6.1.0-18-amd64`
+
+## Solution
+Remove bad update files
+```terminal
+sudo rm /var/lib/dpkg/info/linux-headers-6.1.0-18*
+sudo rm /var/lib/dpkg/info/linux-image-6.1.0-18-amd64.*
+```
+
+## Other commands should now run
+```terminal
+sudo apt install --fix-broken
+```
+
+
 
 
 
