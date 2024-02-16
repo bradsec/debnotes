@@ -868,7 +868,7 @@ sudo ifdown enp0s31f6
 sudo ifup enp0s31f6
 ```
 
-## Bad kernal update 16 Feb 2024, 6.1.0-18 causing issues updating or upgrading packages
+## Bad kernal update 16 Feb 2024, 6.1.0-18 causing issues updating or upgrading packages caused by issues in nVidia driver files with 6.1.0.18 kernel
 
 ```terminal
 # Terminal error after attempting to apt update and upgrade
@@ -936,7 +936,7 @@ dpkg: error processing package linux-headers-amd64 (--configure):
 ```
 
 ## Solution
-Remove bad update files
+Remove bad update package files
 ```terminal
 sudo rm /var/lib/dpkg/info/linux-headers-6.1.0-18*
 sudo rm /var/lib/dpkg/info/linux-image-6.1.0-18-amd64.*
