@@ -923,7 +923,17 @@ E: Sub-process /usr/bin/dpkg returned an error code (1)
 ```
 
 ## Problem
-The following commands fail `sudo apt install --fix-broken` and `sudo dpkg --configure -a` as they are stuck on `unset ARCH; env NV_VERBOSE=1 make -j12 modules KERNEL_UNAME=6.1.0-18-amd64`
+The following commands fail `sudo apt install --fix-broken` and `sudo dpkg --configure -a` 
+```terminal
+Hanging on `unset ARCH; env NV_VERBOSE=1 make -j12 modules KERNEL_UNAME=6.1.0-18-amd64`
+dpkg: error processing package linux-headers-6.1.0-18-amd64 (--configure):
+ installed linux-headers-6.1.0-18-amd64 package post-installation script subprocess returned error exit status 1
+dpkg: dependency problems prevent configuration of linux-headers-amd64:
+ linux-headers-amd64 depends on linux-headers-6.1.0-18-amd64 (= 6.1.76-1); however:
+  Package linux-headers-6.1.0-18-amd64 is not configured yet.
+
+dpkg: error processing package linux-headers-amd64 (--configure):
+```
 
 ## Solution
 Remove bad update files
