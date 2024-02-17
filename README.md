@@ -938,13 +938,12 @@ dpkg: error processing package linux-headers-amd64 (--configure):
 ## Solution
 Remove bad update package files
 ```terminal
+sudo apt -y purge linux-image-amd64 linux-headers-amd64 linux-image-6.1.0-18-amd64 linux-headers-6.1.0-18-amd64
+sudo apt -y autoclean
+sudo apt -y autoremove
+sudo rm /var/lib/dpkg/info/linux-image-6.1.0-18*
 sudo rm /var/lib/dpkg/info/linux-headers-6.1.0-18*
-sudo rm /var/lib/dpkg/info/linux-image-6.1.0-18-amd64.*
-```
-
-## Other commands should now run
-```terminal
-sudo apt install --fix-broken
+sudo apt -y install --fix-broken
 ```
 
 
