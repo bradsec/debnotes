@@ -504,6 +504,82 @@ sudo reboot
 # Check USB power management has been changed to -1
 cat /sys/module/usbcore/parameters/autosuspend
 ```
+
+### Script to install latest linux Go version
+```terminal
+#!/bin/bash
+
+# Function to check if the script is running as root
+check_root() {
+    if [[ $EUID -ne 0 ]]; then
+        echo "This script must be run as root." >&2
+        exit 1
+    fi
+}
+
+# Function to download a file
+function download_file() {
+    local dst_file=${1}
+    local src_url=${2}
+
+    # Check if the source URL is blank
+    if [[ -z ${src_url} ]]; then
+        echo "Unable to get the latest application source URL. The application source URL may have changed or moved."
+        exit 1
+    fi
+
+    echo "Downloading file..."
+    echo "SRC: ${src_url}"
+    echo "DEST: ${dst_file}"
+
+    # Check if the source URL is valid
+    if [[ ! ${src_url} =~ ^(http|https|ftp):// ]]; then
+        echo "Invalid source URL. Only URLs starting with 'http://', 'https://', or 'ftp://' are supported."
+        exit 1
+    fi
+
+    if wget --user-agent=Mozilla --content-disposition -c -E -O \
+    "${dst_file}" "${src_url}" -q --show-progress --progress=bar:force 2>&1; then
+        echo
+        echo "File successfully downloaded."
+    else
+        echo "There was a problem downloading the file. Trying another method..."
+        echo "Trying wget without resume option..."
+        if wget --user-agent=Mozilla --content-disposition -E -O \
+            "${dst_file}" "${src_url}" -q --show-progress --progress=bar:force 2>&1; then
+            echo
+            echo "File successfully downloaded."
+        elif curl -L -J "${src_url}" -o "${dst_file}" --progress-bar; then
+            echo
+            echo "File successfully downloaded."
+        else
+            echo "There was a problem downloading the file. Check URL and source file."
+            exit 1
+        fi
+    fi
+}
+
+# Check if the script is run as root
+check_root
+
+# Variables for download
+from_url="https://go.dev$(curl -s https://go.dev/dl/ | \
+        grep linux | grep $(dpkg --print-architecture) -A 0 | sed -r 's/.*href="([^"]+).*/\1/g' | awk 'NR==1')"
+save_file="/tmp/golang.tar.gz"
+
+# Download the file
+download_file ${save_file} ${from_url}
+
+# Extract the downloaded file
+rm -rf /usr/local/go && tar -C /usr/local -xzf ${save_file}
+
+# Remove temp save file
+rm ${save_file}
+
+# Run go version and display the output
+/usr/local/go/bin/go version
+```
+
 ### Docker Install
 ```terminal
 # Remove any older versions
