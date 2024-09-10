@@ -16,7 +16,7 @@ sudo apt-get -y install net-tools nfs-common curl wget nmap tmux htop nvtop
 sudo apt-get -y install cifs-utils smbclient
 
 # Tools for mounting different filesystems ExFat NTFS
-sudo apt-get -t install exfat-fuse exfat-utils ntfs-3g
+sudo apt-get -y install exfat-fuse ntfs-3g
 
 # Development and version control tools
 sudo apt-get -y install git
@@ -522,7 +522,7 @@ echo \
 sudo apt-get update
 
 # Install latest version
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install docker-ce docker-compose docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # If required add docker group and current user to docker group
 if ! getent group docker > /dev/null; then sudo groupadd docker; fi
