@@ -4,8 +4,6 @@
 ## Quick Links
 - **Related Projects:**
   - [bradsec/debapps](https://github.com/bradsec/debapps) - Quick Debian applications installer
-  - [bradsec/debgnome](https://github.com/bradsec/debgnome) - Quick GNOME desktop customisation
-
 ---
 
 ## Table of Contents
