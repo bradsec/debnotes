@@ -258,6 +258,22 @@ fi
 # Restart terminal and headerbar should be gone. To move terminal around screen right click and show menu.
 ```
 
+## Fix Debian 13 Trixie Gnome Wayland OpenGL issue "Could not initialise OpenGL support"
+```terminal
+# edit with vi or nano /etc/environment.d/90atk-adaptor.conf
+# Add line
+GDK_GL=gles
+
+# Save and exit.
+# Reboot system
+```
+
+## Fix Debian 13 VLC Gnome Wayland Black screen playing webm and other videos
+- Open VLC - Goto Tools > Preferences
+- Select Input / Codecs
+- Change hardware-accelerated decoding to disabled
+
+
 ## Simple UFW firewall with GUI management
 ```terminal
 sudo apt-get -y install ufw gufw
