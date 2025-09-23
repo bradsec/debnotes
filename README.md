@@ -63,6 +63,7 @@
 - [Wayland Issues](#wayland-issues)
 - [Kernel Update Problems](#kernel-update-problems)
 - [Network Interface Issues](#network-interface-issues)
+- [Raspberry Pi VNC Issues](#raspberry-pi-vnc-issues)
 
 ---
 
@@ -917,4 +918,245 @@ mount -t nfs 192.168.0.10:/srv/nfs /mnt/thisdir
 ip address show
 
 # Show network interface names only
-ip address show | awk '/^[0-9]+:/ {sub(/:$/,
+ip address show | awk '/^[0-9]+:/ {sub(/:$/, "", $2); print $2}'
+
+# Show interface names with MAC addresses only
+ip address show | awk '/^[0-9]+:/ {interface=$2} /link\/ether/ {print interface, $2}'
+
+# Show only network interfaces with assigned IP addresses
+ip address show | awk '/^[0-9]+:/ {interface=$2} /inet / {print interface, $2}'
+```
+
+#### DHCP Interface Configuration
+Change `enp0s31f6` to the interface name to configure with DHCP.
+Example config `/etc/network/interfaces`:
+
+```terminal
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The ethernet interface to be configured with DHCP
+allow-hotplug enp0s31f6
+iface enp0s31f6 inet dhcp
+```
+
+To bring network interfaces down and up use `ifdown` and `ifup`:
+```terminal
+# Set to down
+sudo ifdown enp0s31f6
+
+# Set to up
+sudo ifup enp0s31f6
+```
+
+### Package Management
+
+#### Enable Snap and Flatpak Support
+- Open "Software" application
+- Search in Software application for "software"
+- Click "Software"
+- Scroll down to Add-ons and select Flatpak and Snap Support
+
+#### Microcode Installation (Debian 11)
+- Open Synaptic Package Manager
+- Search "microcode"
+- Install appropriate AMD or Intel microcode
+
+#### Missing Firmware (Debian 11 Bullseye)
+Check `/etc/apt/sources.list` contains `contrib non-free`, otherwise edit the file:
+
+```terminal
+# If sources.list is missing contrib non-free:
+sudo sed -r -i 's/^deb(.*)$/deb\1 contrib non-free/g' /etc/apt/sources.list
+
+sudo apt-get update && sudo apt-get -y install firmware-misc-nonfree
+
+# If wifi drivers such those in some Intel NUCs are missing try...
+sudo apt-get -y install firmware-iwlwifi
+```
+
+#### Advanced GRUB Configuration
+Remove GRUB timeout, enable splash and disable USB auto suspend power management:
+
+```terminal
+# Edit /etc/default/grub and ensure the the following lines exist
+
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=0
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash usbcore.autosuspend=-1"
+
+# Run GRUB update
+sudo update-grub
+
+# Reboot
+sudo reboot
+
+# Check USB power management has been changed to -1
+cat /sys/module/usbcore/parameters/autosuspend
+```
+
+---
+
+## Troubleshooting
+
+### Wayland Issues
+
+#### Fix Debian 13 Trixie GNOME Wayland OpenGL Issue
+**Problem:** "Could not initialise OpenGL support"
+
+```terminal
+# edit with vi or nano /etc/environment.d/90atk-adaptor.conf
+# Add line
+GDK_GL=gles
+
+# Save and exit.
+# Reboot system
+```
+
+#### Fix Debian 13 VLC GNOME Wayland Black Screen
+**Problem:** Black screen playing webm and other videos in VLC
+
+**Solution:**
+- Open VLC → Go to Tools > Preferences
+- Select Input / Codecs
+- Change hardware-accelerated decoding to disabled
+
+#### Fix Slow VNC on Raspberry Pi 4
+**Problem:** Slow lagging VNC and VNC resolution issues on headless Raspberry Pi 4
+
+**Solution:** Edit `/boot/config.txt`:
+```terminal
+#### Comment out the following lines
+# Enable DRM VC4 V3D driver
+#dtoverlay=vc4-kms-v3d
+#max_framebuffers=2
+
+#### Uncomment this line
+hdmi_force_hotplug=1
+
+#### Uncomment and modify the following two lines to force higher resolution
+# uncomment to force a specific HDMI mode (this will force VGA)
+hdmi_group=2
+hdmi_mode=82
+```
+
+### Raspberry Pi VNC Issues
+
+#### Fix Slow VNC on Raspberry Pi 4
+**Problem:** Slow lagging VNC and VNC resolution issues on headless Raspberry Pi 4
+
+**Solution:** Edit `/boot/config.txt`:
+```terminal
+#### Comment out the following lines
+# Enable DRM VC4 V3D driver
+#dtoverlay=vc4-kms-v3d
+#max_framebuffers=2
+
+#### Uncomment this line
+hdmi_force_hotplug=1
+
+#### Uncomment and modify the following two lines to force higher resolution
+# uncomment to force a specific HDMI mode (this will force VGA)
+hdmi_group=2
+hdmi_mode=82
+```
+
+### Kernel Update Problems
+
+#### Bad Kernel Update (6.1.0-18) - February 16, 2024
+**Problem:** Issues updating or upgrading packages caused by problems in NVIDIA driver files with 6.1.0.18 kernel.
+
+**Symptoms:**
+```terminal
+Building module:
+Cleaning build area...
+unset ARCH; env NV_VERBOSE=1 make -j12 modules KERNEL_UNAME=6.1.0-18-amd64..............(bad exit status: 2)
+Error! Bad return status for module build on kernel: 6.1.0-18-amd64 (x86_64)
+Consult /var/lib/dkms/nvidia-current/545.23.08/build/make.log for more information.
+Error! One or more modules failed to install during autoinstall.
+Refer to previous errors for more information.
+dkms: autoinstall for kernel: 6.1.0-18-amd64 failed!
+run-parts: /etc/kernel/postinst.d/dkms exited with return code 11
+dpkg: error processing package linux-image-6.1.0-18-amd64 (--configure):
+ installed linux-image-6.1.0-18-amd64 package post-installation script subprocess returned error exit status 1
+```
+
+**Additional Problem:** The following commands fail:
+- `sudo apt install --fix-broken`
+- `sudo dpkg --configure -a`
+
+**Solution:** Remove bad update package files:
+```terminal
+sudo apt -y purge linux-image-amd64 linux-headers-amd64 linux-image-6.1.0-18-amd64 linux-headers-6.1.0-18-amd64
+sudo apt -y autoclean
+sudo apt -y autoremove
+sudo rm /var/lib/dpkg/info/linux-image-6.1.0-18*
+sudo rm /var/lib/dpkg/info/linux-headers-6.1.0-18*
+sudo apt -y install --fix-broken
+```
+
+### Network Interface Issues
+
+#### Base Install - Network Commands Not Working
+**Problem:** `ifconfig`, `shutdown`, `reboot`, `halt` and other commands not working.
+
+**Cause:** `/sbin` is missing from the user `$PATH` variable.
+
+**Check current path:**
+- `echo $PATH` or `env | grep PATH`
+
+**Solution 1:** Edit `/etc/profile` file and append `/sbin` to the second PATH variable.
+- Using nano: `sudo nano /etc/profile`
+- Using vi: `sudo vi /etc/profile`
+
+*You may need to logout and back in to initialize the new PATH variables.*
+
+**Solution 2:** Use direct path:
+```terminal
+sudo /sbin/reboot
+sudo /sbin/halt
+sudo /sbin/shutdown
+```
+
+**Solution 3:** Use systemctl commands:
+```terminal
+sudo systemctl reboot
+sudo systemctl halt
+sudo systemctl poweroff
+```
+
+---
+
+## Quick Reference
+
+### Essential First Steps (New Installation)
+1. [Update repositories and install sudo](#sudo-configuration)
+2. [Add contrib non-free repositories](#repository-setup)
+3. [Install common utilities](#common-utilities-and-applications)
+4. [Set up firewall](#firewall-setup-ufw)
+5. [Configure GNOME desktop](#gnome-customization)
+
+### Most Useful Commands
+- **Update system:** `sudo apt-get update && sudo apt-get -y dist-upgrade`
+- **Fix broken packages:** `sudo apt-get -y install --fix-broken`
+- **Clean system:** `sudo apt-get -y autoremove && sudo apt-get -y autoclean`
+- **Show network info:** `ip a`
+- **Monitor network:** `sudo netstat -tulpan`
+- **Check boot target:** `sudo systemctl get-default`
+
+### Emergency Recovery
+- **Drop to terminal:** `CTRL+ALT+F3`
+- **Return to desktop:** `CTRL+ALT+F1`
+- **Reinstall GNOME:** `sudo apt -y install --reinstall gnome-shell gnome-session`
+- **Reset user config:** Remove `~/.config`, `~/.cache`, `~/.local` directories
+
+---
+
+*This guide covers Debian Linux distributions including Kali, Ubuntu, and PopOS. Always backup important data before making system changes.*
