@@ -694,6 +694,21 @@ ps -p $$
 
 ---
 
+## Virtualization Tools
+
+### Install QEMU/KVM
+
+```terminal
+sudo apt install qemu-system-x86 libvirt-daemon-system virtinst virt-manager virt-viewer ovmf swtpm qemu-utils guestfs-tools libosinfo-bin tuned
+sudo systemctl enable libvirtd.service
+sudo systemctl start libvirtd.service
+sudo systemctl enable --now tuned
+sudo tuned-adm profile virtual-host
+
+sudo virsh net-start default
+sudo virsh net-autostart default
+```
+
 ## Development Tools
 
 ### Docker Installation
