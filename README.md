@@ -13,7 +13,6 @@
 - [Anti-Virus (ClamAV)](#anti-virus-clamav)
 - [Printer Support](#printer-support)
 - [Ubuntu Specific Packages](#ubuntu-specific-packages)
-- [Nvidia Graphics Drivers](#nvidia-graphics-drivers)
 
 ### [Desktop Environment & UI](#desktop-environment--ui)
 - [GNOME Customization](#gnome-customization)
