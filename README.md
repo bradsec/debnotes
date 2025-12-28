@@ -182,22 +182,6 @@ sudo apt-get -y cups
 sudo apt-get -y install ubuntu-restricted-extras
 ```
 
-### Nvidia Graphics Drivers
-```terminal
-# Notes:
-# - Debian 12 Bookworm enable or append 'contrib non-free' to etc source in `/etc/apt/sources.list`
-# - Then run `sudo apt update`  
-# - Also if BIOS Secure boot is enable you may have some issues with the system failing to boot
-# unless you correctly sign the modules as suggested: https://wiki.debian.org/NvidiaGraphicsDrivers
-
-sudo apt-get -y install nvidia-detect
-sudo nvidia-detect
-sudo apt-get -y install nvidia-driver
-sudo apt-getÂ -y install nvidia-cuda-toolkit nvidia-cuda-dev
-```
-
----
-
 ## Desktop Environment & UI
 
 ### GNOME Customization
@@ -699,15 +683,55 @@ ps -p $$
 ### Install QEMU/KVM
 
 ```terminal
-sudo apt install qemu-system-x86 libvirt-daemon-system virtinst virt-manager virt-viewer ovmf swtpm qemu-utils guestfs-tools libosinfo-bin tuned
+# Initial packages includes filesystem sharing and bridge interface utilities
+sudo apt install qemu-system-x86 libvirt-daemon-system virtinst virt-manager virt-viewer ovmf swtpm qemu-utils guestfs-tools libosinfo-bin tuned virtiofsd bridge-utils
+# Enable services and autostart on reboot
 sudo systemctl enable libvirtd.service
 sudo systemctl start libvirtd.service
-sudo systemctl enable --now tuned
+sudo systemctl enable tuned
+sudo systemctl start tuned
 sudo tuned-adm profile virtual-host
-
 sudo virsh net-start default
 sudo virsh net-autostart default
 ```
+
+### QEMU/KVM Download Virtio drivers (ISO)
+[Fedora VirtIO Drivers and ISO](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/?C=M;O=D)
+
+### Enabled Bridge Interface for QEMU/KVM (allows VMs to use IP from local network, not NAT)
+Edit `/etc/network/interfaces`
+```terminal
+# Example only of what /etc/network/interfaces should look like
+cat /etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# Primay network interface with bridge
+auto br0
+iface br0 inet static
+  # This is the VM server host ip details, check using ip addr command
+	address 192.168.1.36
+	broadcast 192.168.1.255
+	netmask 255.255.255.0
+	gateway 192.168.1.1
+
+  # This is the bridged network interface ID on the VM host, use ip addr command to check.
+	bridge_ports enp0s31f0
+	bridge_stp off
+	bridge_waitport 0
+	bridge fd 0
+```
+After making changes restart the networking service
+`sudo systemctl restart networking.service`
+
+In Virtual Machine Manager, in the VM config select virtual network interface and change source to `Bridge device...` type in the Device name set in interfaces config example `br0`
+
 
 ## Development Tools
 
