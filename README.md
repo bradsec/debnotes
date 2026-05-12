@@ -230,6 +230,16 @@ dconf write $PROFILE/use-theme-colors "false"
 - Additional settings under Tweaks application
   - Appearance and Extensions tabs
 
+### GNOME Extension Manager
+```terminal
+sudo apt -y install gnome-shell-extension-manager
+```
+**Workaround fix Dash to Dock Nofitication Count on Icon not resetting issue (disable notifications)**
+- Open Extension Manager
+- Open Dash-to-Dock Preferences (gear icon)
+- Open Launchers tab
+- Go to bottom of page untick "Show the number of unread notifications"
+
 ### GNOME Troubleshooting
 **Problem:** Debian 12 Bookworm GNOME desktop logging in error "Oops something went wrong..."
 
