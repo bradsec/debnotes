@@ -119,7 +119,7 @@ sudo apt-get -y install bleachbit
 sudo apt-get -y install stacer
 
 # File archive compression tools
-sudo apt-get -y install rar unrar
+sudo apt-get -y install rar unrar zip unzip
 
 # Remote desktop access client
 sudo apt-get -y install remmina
